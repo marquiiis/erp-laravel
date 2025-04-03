@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserConfigController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,11 +41,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/configuracoes', [EmpresaController::class, 'configuracoes'])->name('empresa.configuracoes');
-Route::post('/configuracoes/atualizar-nome', [EmpresaController::class, 'atualizarNome'])->name('empresa.atualizarNome');
+Route::post('/configuracoes/atualizar-dados', [EmpresaController::class, 'atualizarDados'])->name('empresa.atualizarDados');
 Route::post('/configuracoes/adicionar-email', [EmpresaController::class, 'adicionarEmail'])->name('empresa.adicionarEmail');
 Route::delete('/configuracoes/remover-email/{id}', [EmpresaController::class, 'removerEmail'])->name('empresa.removerEmail');
 Route::delete('/configuracoes/remover-funcionario/{id}', [EmpresaController::class, 'removerFuncionario'])->name('empresa.removerFuncionario');
 Route::post('/configuracoes/atualizar-senha/{id}', [EmpresaController::class, 'atualizarSenhaFuncionario'])->name('empresa.atualizarSenha');
 Route::post('/configuracoes/alterar-senha', [UserController::class, 'alterarSenha'])->name('user.alterarSenha');
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/configuracao/usuario', [UserConfigController::class, 'index'])->name('config.usuario');
+    Route::post('/configuracao/usuario/email', [UserConfigController::class, 'atualizarEmail'])->name('config.usuario.email');
+    Route::post('/configuracao/usuario/senha', [UserConfigController::class, 'atualizarSenha'])->name('config.usuario.senha');
+});
 

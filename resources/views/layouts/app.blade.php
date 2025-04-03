@@ -44,6 +44,7 @@
             </a>
             <a class="nav-link" href="{{ route('produtos.index') }}">Produtos</a>
             <a href="{{ route('empresa.configuracoes') }}" class="nav-link">Configurações</a>
+            <a class="nav-link" href="{{ route('config.usuario') }}">Configurações do Usuário</a>
 
             <div class="ml-auto d-flex align-items-center">
                 <span class="mr-3">Olá, {{ Auth::user()->name }}</span>

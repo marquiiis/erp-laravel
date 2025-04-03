@@ -12,27 +12,42 @@ class EmpresaController extends Controller
 {
     public function configuracoes()
     {
-        $empresa = auth()->user()->empresa;
+        $empresa = Empresa::find(auth()->user()->empresa_id); // <- FORÇA RECARREGAR
 
         if (!$empresa) {
             return redirect()->route('empresa.criar')->with('error', 'Você precisa criar uma empresa antes de acessar as configurações.');
         }
 
-        $emails = \App\Models\EmailPermitido::where('empresa_id', $empresa->id)->get();
-        $usuarios = \App\Models\User::where('empresa_id', $empresa->id)->get();
+        $emails = EmailPermitido::where('empresa_id', $empresa->id)->get();
+        $usuarios = User::where('empresa_id', $empresa->id)->get();
 
         return view('empresa.configuracoes', compact('empresa', 'emails', 'usuarios'));
     }
 
-    public function atualizarNome(Request $request)
+
+    public function atualizarDados(Request $request)
     {
-        $request->validate(['nome' => 'required|string|max:255']);
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'cnpj' => 'nullable|string|max:20',
+            'endereco' => 'nullable|string|max:255',
+            'telefone' => 'nullable|string|max:20',
+        ]);
 
-        $empresa = auth()->user()->empresa;
-        $empresa->nome = $request->nome;
-        $empresa->save();
+        $empresa = Empresa::find(auth()->user()->empresa_id);
 
-        return back()->with('success', 'Nome da empresa atualizado com sucesso!');
+        if (auth()->id() !== $empresa->empresa_admin_id) {
+            abort(403);
+        }
+
+        $empresa->update([
+            'nome' => $request->nome,
+            'cnpj' => $request->cnpj,
+            'endereco' => $request->endereco,
+            'telefone' => $request->telefone,
+        ]);
+
+        return redirect()->route('empresa.configuracoes')->with('success', 'Dados da empresa atualizados com sucesso!');
     }
 
     public function adicionarEmail(Request $request)
@@ -89,46 +104,36 @@ class EmpresaController extends Controller
         return back()->with('success', 'Funcionário removido com sucesso.');
     }
 
-    public function atualizarSenhaFuncionario(Request $request, $id)
-    {
-        $request->validate([
-            'nova_senha' => 'required|min:6|confirmed',
-        ]);
-
-        $user = User::findOrFail($id);
-
-        if ($user->empresa_id !== auth()->user()->empresa_id) {
-            abort(403);
-        }
-
-        $user->password = Hash::make($request->nova_senha);
-        $user->save();
-
-        return back()->with('success', 'Senha do funcionário atualizada!');
-    }
-
     public function criar()
     {
         return view('empresa.criar');
     }
 
+    
     public function salvar(Request $request)
     {
         $request->validate([
             'nome' => 'required|string|max:255',
+            'cnpj' => 'nullable|string|max:20',
+            'endereco' => 'nullable|string|max:255',
+            'telefone' => 'nullable|string|max:20',
         ]);
-    
-        // Cria a empresa e já define o usuário como admin
+
         $empresa = Empresa::create([
             'nome' => $request->nome,
-            'empresa_admin_id' => auth()->id(), // 👈 MUITO IMPORTANTE
+            'cnpj' => $request->cnpj,
+            'endereco' => $request->endereco,
+            'telefone' => $request->telefone,
+            'empresa_admin_id' => auth()->id(),
         ]);
-    
-        // Atualiza o usuário logado para pertencer à empresa
+
         $user = User::find(auth()->id());
         $user->empresa_id = $empresa->id;
         $user->save();
-    
+
         return redirect()->route('empresa.configuracoes')->with('success', 'Empresa criada com sucesso!');
     }
+
+
+
 }
