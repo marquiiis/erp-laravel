@@ -7,3 +7,4 @@
         <p class="card-text">Bem-vindo, {{ Auth::user()->name }}. Você está logado!</p>
     </div>
 </div>
+@endsection

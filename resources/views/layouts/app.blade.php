@@ -7,26 +7,33 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-    <!-- Custom CSS -->
     <style>
         body {
+            margin: 0;
             overflow-x: hidden;
         }
-        .sidebar {
+
+        .wrapper {
+            display: flex;
             min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
             background-color: #343a40;
+            color: #fff;
+            padding: 1rem;
+            transition: transform 0.3s ease-in-out;
         }
 
         .sidebar a {
             color: #ddd;
-            text-decoration: none;
             display: block;
-            padding: 12px 20px;
-            transition: background-color 0.2s ease;
+            padding: 10px 20px;
+            text-decoration: none;
         }
 
         .sidebar a:hover,
@@ -35,31 +42,74 @@
             color: #fff;
         }
 
-        /* Animação do submenu */
-        .submenu {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.3s ease-in-out;
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
         }
 
-        .submenu.show {
-            max-height: 500px; /* suficiente pra mostrar os itens dentro */
+        #toggleMenu {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #343a40;
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 4px;
+            z-index: 1100;
         }
 
+        /* MOBILE: menu escondido */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+                z-index: 1050;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .content {
+                padding-top: 60px;
+            }
+        }
+
+        /* DESKTOP: permitir ocultar também */
+        @media (min-width: 769px) {
+            .sidebar.collapsed {
+                transform: translateX(-250px);
+            }
+
+            .content.expanded {
+                margin-left: 0;
+            }
+        }
     </style>
-
 </head>
 <body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <div class="sidebar p-3">
-            <h5 class="text-white mb-4">ERP</h5>
 
-            <a href="{{ route('home') }}">
+@if(auth()->check())
+    <!-- Botão visível em todas resoluções -->
+    <button id="toggleMenu">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <h5 class="text-white mb-4 text-end">ERP</h5>
+
+            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
                 <i class="fas fa-home me-2"></i> Home
             </a>
 
-            <a href="{{ route('produtos.index') }}">
+            <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
                 <i class="fas fa-box-open me-2"></i> Produtos
             </a>
 
@@ -68,28 +118,55 @@
                 <span><i class="fas fa-cog me-2"></i> Configurações</span>
                 <i class="fas fa-chevron-down"></i>
             </a>
-            <div class="submenu ps-3 collapse" id="submenuConfig" data-bs-parent=".sidebar">
-                <a href="{{ route('empresa.configuracoes') }}">
+            <div class="submenu collapse ps-3 {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}" id="submenuConfig">
+                <a href="{{ route('empresa.configuracoes') }}" class="{{ request()->is('configuracoes') ? 'active' : '' }}">
                     <i class="fas fa-building me-2"></i> Empresa
                 </a>
-                <a href="{{ route('config.usuario') }}">
+                <a href="{{ route('config.usuario') }}" class="{{ request()->is('configuracao/usuario') ? 'active' : '' }}">
                     <i class="fas fa-user me-2"></i> Usuário
                 </a>
             </div>
 
-            <form action="{{ route('logout') }}" method="POST" class="mt-3">
+
+            <form action="{{ route('logout') }}" method="POST" class="mt-3 px-3">
                 @csrf
-                <button class="btn btn-danger w-100"><i class="fas fa-sign-out-alt me-2"></i> Sair</button>
+                <button class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt me-2"></i> Sair
+                </button>
             </form>
         </div>
 
-        <!-- Main content -->
-        <div class="flex-grow-1 p-4">
+        <!-- Conteúdo -->
+        <main class="content" id="mainContent">
             @yield('content')
-        </div>
+        </main>
     </div>
+@else
+    <!-- Layout público -->
+    <main class="p-4">
+        @yield('content')
+    </main>
+@endif
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.getElementById('toggleMenu');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('mainContent');
+
+        toggle.addEventListener('click', () => {
+            // Mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('show');
+            } else {
+                // Desktop
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+            }
+        });
+    });
+</script>
 </body>
 </html>
