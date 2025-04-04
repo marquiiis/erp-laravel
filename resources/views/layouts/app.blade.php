@@ -3,62 +3,93 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Painel ERP</title>
+    <title>{{ config('app.name', 'ERP') }}</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap 4 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
+    <!-- Custom CSS -->
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding-top: 70px;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
         }
 
-        .navbar-custom {
-            background-color: #1f4037;
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            transition: background-color 0.2s ease;
         }
 
-        .navbar-custom .navbar-brand,
-        .navbar-custom .nav-link,
-        .navbar-custom .btn {
+        .sidebar a:hover,
+        .sidebar .active {
+            background-color: #495057;
             color: #fff;
         }
 
-        .navbar-custom .btn:hover {
-            background-color: #168f69;
-            border-color: #168f69;
+        /* Animação do submenu */
+        .submenu {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease-in-out;
         }
+
+        .submenu.show {
+            max-height: 500px; /* suficiente pra mostrar os itens dentro */
+        }
+
     </style>
+
 </head>
 <body>
-    @auth
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/home') }}">
-                CHAYDOW
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar p-3">
+            <h5 class="text-white mb-4">ERP</h5>
+
+            <a href="{{ route('home') }}">
+                <i class="fas fa-home me-2"></i> Home
             </a>
-            <a class="nav-link" href="{{ route('produtos.index') }}">Produtos</a>
-            <a href="{{ route('empresa.configuracoes') }}" class="nav-link">Configurações</a>
-            <a class="nav-link" href="{{ route('config.usuario') }}">Configurações do Usuário</a>
 
-            <div class="ml-auto d-flex align-items-center">
-                <span class="mr-3">Olá, {{ Auth::user()->name }}</span>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-sm btn-light">Sair</button>
-                </form>
+            <a href="{{ route('produtos.index') }}">
+                <i class="fas fa-box-open me-2"></i> Produtos
+            </a>
+
+            <!-- Configurações com submenu -->
+            <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-cog me-2"></i> Configurações</span>
+                <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="submenu ps-3 collapse" id="submenuConfig" data-bs-parent=".sidebar">
+                <a href="{{ route('empresa.configuracoes') }}">
+                    <i class="fas fa-building me-2"></i> Empresa
+                </a>
+                <a href="{{ route('config.usuario') }}">
+                    <i class="fas fa-user me-2"></i> Usuário
+                </a>
             </div>
-        </div>
-    </nav>
-    @endauth
 
-    <main class="container py-4">
-        @yield('content')
-    </main>
+            <form action="{{ route('logout') }}" method="POST" class="mt-3">
+                @csrf
+                <button class="btn btn-danger w-100"><i class="fas fa-sign-out-alt me-2"></i> Sair</button>
+            </form>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-grow-1 p-4">
+            @yield('content')
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
