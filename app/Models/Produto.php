@@ -2,27 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 
 class Produto extends Model
 {
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-    use HasFactory;
-
-    public function empresa()
-    {
-        return $this->belongsTo(Empresa::class);
-    }
-
-
     protected $fillable = [
-        'nome',
-        'codigo',
-        'estoque_minimo',
+        'codigointerno',
+        'codreferencia',
+        'descr',
+        'tipoprod',
+        'subtipoprod',
+        'marca',
+        'submarca',
+        'ncm',
+        'ativo',
+        'manufaturado',
+        'sazonal',
+        'codtipoprod',
+        'codigoprodanvisa',
+        'cnpjfamilia',
+        'prazovalidade',
+        'prazocomercializacao',
+        'prazocritico',
+        'precomax',
+        'user_id',
+        'empresa_id',
+        'estoque'
     ];
+
+    public function embalagem()
+    {
+        return $this->hasOne(Embalagem::class);
+    }
 }
