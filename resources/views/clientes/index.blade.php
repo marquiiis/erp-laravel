@@ -11,6 +11,28 @@
 @endpush
 
 @section('content')
+
+@php
+    $campos = [
+        'codigointerno' => 'Código Interno',
+        'razaosocial' => 'Nome',
+        'fantasia' => 'Sobrenome',
+        'pessoa' => 'Pessoa (F ou J)',
+        'cnpj' => 'CNPJ',
+        'cpf' => 'CPF',
+        'rg' => 'RG',
+        'cep' => 'CEP',
+        'endereco' => 'Endereço',
+        'numero' => 'Número',
+        'bairro' => 'Bairro',
+        'cidade' => 'Cidade',
+        'estado' => 'Estado',
+        'pais' => 'País',
+        'complemento' => 'Complemento',
+        'telefone' => 'Telefone'
+    ];
+@endphp
+
 <div class="container">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
@@ -66,32 +88,12 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
-                                                    @php $campos = [
-                                                        'codigointerno' => 'Código Interno',
-                                                        'razaosocial' => 'Nome',
-                                                        'fantasia' => 'Sobrenome',
-                                                        'pessoa' => 'Pessoa (F ou J)',
-                                                        'cnpj' => 'CNPJ',
-                                                        'cpf' => 'CPF',
-                                                        'rg' => 'RG',
-                                                        'cep' => 'CEP',
-                                                        'endereco' => 'Endereço',
-                                                        'numero' => 'Número',
-                                                        'bairro' => 'Bairro',
-                                                        'cidade' => 'Cidade',
-                                                        'estado' => 'Estado',
-                                                        'pais' => 'País',
-                                                        'complemento' => 'Complemento',
-                                                        'telefone' => 'Telefone'
-                                                    ]; @endphp
-
                                                     @foreach ($campos as $campo => $label)
                                                     <div class="col-md-6 mb-2">
                                                         <label class="form-label text-start d-block">{{ $label }}</label>
                                                         <input type="text" name="{{ $campo }}" class="form-control" value="{{ $cliente->$campo }}">
                                                     </div>
                                                     @endforeach
-
 
                                                     <div class="col-md-6 mb-2">
                                                         <label class="form-label text-start d-block">Ativo</label>
@@ -142,13 +144,13 @@
                 <div class="row">
                     @foreach ($campos as $campo => $label)
                     <div class="col-md-6 mb-2">
-                        <label class="form-label">{{ $label }}</label>
+                        <label class="form-label text-start d-block">{{ $label }}</label>
                         <input type="text" name="{{ $campo }}" class="form-control">
                     </div>
                     @endforeach
 
                     <div class="col-md-6 mb-2">
-                        <label class="form-label">Ativo</label>
+                        <label class="form-label text-start d-block">Ativo</label>
                         <select name="ativo" class="form-control">
                             <option value="Sim">Sim</option>
                             <option value="Não">Não</option>
@@ -164,4 +166,5 @@
     </form>
   </div>
 </div>
+
 @endsection
