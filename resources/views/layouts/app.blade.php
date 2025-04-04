@@ -13,147 +13,198 @@
     <style>
         body {
             margin: 0;
+            padding-top: 60px;
+            padding-bottom: 50px;
             overflow-x: hidden;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #212529;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 999;
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #212529;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            z-index: 998;
         }
 
         .wrapper {
             display: flex;
             min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex: 1;
         }
 
         .sidebar {
             width: 250px;
             background-color: #343a40;
-            color: #fff;
-            padding: 1rem;
-            transition: transform 0.3s ease-in-out;
+            color: white;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar h5 {
+            padding: 15px;
+            text-align: center;
         }
 
         .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             color: #ddd;
-            display: block;
             padding: 10px 20px;
             text-decoration: none;
+            transition: background 0.3s;
+            white-space: nowrap;
         }
 
         .sidebar a:hover,
-        .sidebar .active {
+        .sidebar a.active {
             background-color: #495057;
-            color: #fff;
+            color: white;
+        }
+
+        .sidebar i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar .submenu {
+            padding-left: 35px;
+        }
+
+        .sidebar.collapsed a span,
+        .sidebar.collapsed .submenu,
+        .sidebar.collapsed .logout-button span,
+        .sidebar.collapsed .chevron {
+            display: none !important;
+        }
+
+        .sidebar.collapsed .submenu a {
+            padding-left: 0 !important;
+            justify-content: center !important;
         }
 
         .content {
-            flex-grow: 1;
+            flex: 1;
             padding: 20px;
             background-color: #f8f9fa;
         }
 
-        #toggleMenu {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: #343a40;
-            color: white;
+        .btn-toggle {
+            background-color: transparent;
             border: none;
-            padding: 10px 12px;
-            border-radius: 4px;
-            z-index: 1100;
+            color: white;
         }
 
-        /* MOBILE: menu escondido */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
+                height: 100%;
                 transform: translateX(-100%);
-                z-index: 1050;
+                z-index: 998;
             }
 
             .sidebar.show {
                 transform: translateX(0);
             }
-
-            .content {
-                padding-top: 60px;
-            }
         }
 
-        /* DESKTOP: permitir ocultar também */
-        @media (min-width: 769px) {
-            .sidebar.collapsed {
-                transform: translateX(-250px);
-            }
-
-            .content.expanded {
-                margin-left: 0;
-            }
-        }
     </style>
 </head>
 <body>
 
-@if(auth()->check())
-    <!-- Botão visível em todas resoluções -->
-    <button id="toggleMenu">
+<div class="top-bar">
+    <button id="toggleMenu" class="btn btn-toggle">
         <i class="fas fa-bars"></i>
     </button>
+    <span>Você está logado como <strong>{{ auth()->user()->name }}</strong> — {{ now()->format('d/m/Y H:i') }}</span>
+</div>
 
+@if(auth()->check())
     <div class="wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <h5 class="text-white mb-4 text-end">ERP</h5>
+        <div class="content-wrapper">
+            <div id="sidebar" class="sidebar">
+                <h5 class="text-white">ERP</h5>
 
-            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
-                <i class="fas fa-home me-2"></i> Home
-            </a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
 
-            <!-- Cadastro com submenu -->
-            <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center {{ request()->is('produtos*') || request()->is('clientes*') ? 'active' : '' }}">
-                <span><i class="fas fa-folder-plus me-2"></i> Cadastro</span>
-                <i class="fas fa-chevron-down"></i>
-            </a>
-            <div class="submenu ps-3 collapse {{ request()->is('produtos*') || request()->is('clientes*') ? 'show' : '' }}" id="submenuCadastro" data-bs-parent=".sidebar">
-                <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
-                    <i class="fas fa-box-open me-2"></i> Produtos
+                <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+                    <div><i class="fas fa-folder-plus"></i> <span>Cadastro</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
                 </a>
-                <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
-                    <i class="fas fa-users me-2"></i> Clientes
+                <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') ? 'show' : '' }}">
+                    <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
+                        <i class="fas fa-box-open"></i>
+                        <span>Produtos</span>
+                    </a>
+                    <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
+                        <i class="fas fa-users"></i>
+                        <span>Clientes</span>
+                    </a>
+                </div>
+
+                <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+                    <div><i class="fas fa-cog"></i> <span>Configurações</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
                 </a>
+                <div id="submenuConfig" class="submenu collapse {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}">
+                    <a href="{{ route('empresa.configuracoes') }}">
+                        <i class="fas fa-building"></i>
+                        <span>Empresa</span>
+                    </a>
+                    <a href="{{ route('config.usuario') }}">
+                        <i class="fas fa-user"></i>
+                        <span>Usuário</span>
+                    </a>
+                </div>
+
+                <form action="{{ route('logout') }}" method="POST" class="mt-3 px-3 logout-button">
+                    @csrf
+                    <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sign-out-alt me-2"></i> <span>Sair</span>
+                    </button>
+                </form>
             </div>
 
-
-            <!-- Configurações com submenu -->
-            <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-cog me-2"></i> Configurações</span>
-                <i class="fas fa-chevron-down"></i>
-            </a>
-            <div class="submenu collapse ps-3 {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}" id="submenuConfig">
-                <a href="{{ route('empresa.configuracoes') }}" class="{{ request()->is('configuracoes') ? 'active' : '' }}">
-                    <i class="fas fa-building me-2"></i> Empresa
-                </a>
-                <a href="{{ route('config.usuario') }}" class="{{ request()->is('configuracao/usuario') ? 'active' : '' }}">
-                    <i class="fas fa-user me-2"></i> Usuário
-                </a>
-            </div>
-
-
-            <form action="{{ route('logout') }}" method="POST" class="mt-3 px-3">
-                @csrf
-                <button class="btn btn-danger w-100">
-                    <i class="fas fa-sign-out-alt me-2"></i> Sair
-                </button>
-            </form>
+            <main class="content" id="mainContent">
+                @yield('content')
+            </main>
         </div>
 
-        <!-- Conteúdo -->
-        <main class="content" id="mainContent">
-            @yield('content')
-        </main>
+        <footer class="bottom-bar">
+            {{ date('Y') }} © Todos os direitos reservados — <a href="#" class="text-white text-decoration-underline">Ajuda</a>
+        </footer>
     </div>
 @else
-    <!-- Layout público -->
     <main class="p-4">
         @yield('content')
     </main>
@@ -162,21 +213,15 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggle = document.getElementById('toggleMenu');
-        const sidebar = document.getElementById('sidebar');
-        const content = document.getElementById('mainContent');
+    const toggle = document.getElementById('toggleMenu');
+    const sidebar = document.getElementById('sidebar');
 
-        toggle.addEventListener('click', () => {
-            // Mobile
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('show');
-            } else {
-                // Desktop
-                sidebar.classList.toggle('collapsed');
-                content.classList.toggle('expanded');
-            }
-        });
+    toggle.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle('show');
+        } else {
+            sidebar.classList.toggle('collapsed');
+        }
     });
 </script>
 </body>
