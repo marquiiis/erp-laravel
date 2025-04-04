@@ -15,11 +15,31 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'codigointerno' => 'required|string|max:255',
+            'razaosocial' => 'required|string|max:255',
+            'fantasia' => 'nullable|string|max:255',
+            'pessoa' => 'required|in:F,J',
+            'cpf' => 'required_if:pessoa,F|nullable|string|max:20',
+            'cnpj' => 'required_if:pessoa,J|nullable|string|max:20',
+            'rg' => 'nullable|string|max:20',
+            'cep' => 'required|string|max:10',
+            'endereco' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:100',
+            'cidade' => 'required|string|max:100',
+            'estado' => 'required|string|max:2',
+            'pais' => 'required|string|max:100',
+            'complemento' => 'nullable|string|max:255',
+            'telefone' => 'required|string|max:20',
+            'ativo' => 'required|in:Sim,Não',
+        ]);
+
         $data = $request->all();
         $data['empresa_id'] = auth()->user()->empresa_id;
         $data['user_id'] = auth()->id();
-        $data['ativo'] = $request->has('ativo');
         $data['controleshelflife'] = $request->has('controleshelflife');
+        $data['ativo'] = $request->ativo === 'Sim' ? 1 : 0;
 
         Cliente::create($data);
 
@@ -34,11 +54,31 @@ class ClienteController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'codigointerno' => 'required|string|max:255',
+            'razaosocial' => 'required|string|max:255',
+            'fantasia' => 'nullable|string|max:255',
+            'pessoa' => 'required|in:F,J',
+            'cpf' => 'required_if:pessoa,F|nullable|string|max:20',
+            'cnpj' => 'required_if:pessoa,J|nullable|string|max:20',
+            'rg' => 'nullable|string|max:20',
+            'cep' => 'required|string|max:10',
+            'endereco' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:100',
+            'cidade' => 'required|string|max:100',
+            'estado' => 'required|string|max:2',
+            'pais' => 'required|string|max:100',
+            'complemento' => 'nullable|string|max:255',
+            'telefone' => 'required|string|max:20',
+            'ativo' => 'required|in:Sim,Não',
+        ]);
+
         $cliente = Cliente::where('empresa_id', auth()->user()->empresa_id)->findOrFail($id);
 
         $data = $request->all();
-        $data['ativo'] = $request->has('ativo');
         $data['controleshelflife'] = $request->has('controleshelflife');
+        $data['ativo'] = $request->ativo === 'Sim' ? 1 : 0;
 
         $cliente->update($data);
 
@@ -52,5 +92,4 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.index')->with('success', 'Cliente excluído com sucesso!');
     }
-
 }
