@@ -6,6 +6,7 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserConfigController;
+use App\Http\Controllers\ClienteController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,8 +24,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('clientes', ClienteController::class)->middleware('auth');
 
 Route::resource('produtos', ProdutoController::class)->middleware('auth');
+
 
 Route::resource('empresas', EmpresaController::class)->middleware('auth');
 

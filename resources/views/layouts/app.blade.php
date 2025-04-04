@@ -109,9 +109,20 @@
                 <i class="fas fa-home me-2"></i> Home
             </a>
 
-            <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
-                <i class="fas fa-box-open me-2"></i> Produtos
+            <!-- Cadastro com submenu -->
+            <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center {{ request()->is('produtos*') || request()->is('clientes*') ? 'active' : '' }}">
+                <span><i class="fas fa-folder-plus me-2"></i> Cadastro</span>
+                <i class="fas fa-chevron-down"></i>
             </a>
+            <div class="submenu ps-3 collapse {{ request()->is('produtos*') || request()->is('clientes*') ? 'show' : '' }}" id="submenuCadastro" data-bs-parent=".sidebar">
+                <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
+                    <i class="fas fa-box-open me-2"></i> Produtos
+                </a>
+                <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
+                    <i class="fas fa-users me-2"></i> Clientes
+                </a>
+            </div>
+
 
             <!-- Configurações com submenu -->
             <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
