@@ -21,29 +21,29 @@
         <!-- Dados do Produto -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">Dados do Produto</div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label>Código Interno</label>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label text-start">Código Interno</label>
                     <input type="text" name="codigointerno" class="form-control" value="{{ $produto->codigointerno }}" required>
                 </div>
 
-                <div class="mb-3">
-                    <label>Descrição</label>
+                <div class="col-md-6">
+                    <label class="form-label text-start">Descrição</label>
                     <input type="text" name="descr" class="form-control" value="{{ $produto->descr }}" required>
                 </div>
 
-                <div class="mb-3">
-                    <label>Marca</label>
+                <div class="col-md-6">
+                    <label class="form-label text-start">Marca</label>
                     <input type="text" name="marca" class="form-control" value="{{ $produto->marca }}">
                 </div>
 
-                <div class="mb-3">
-                    <label>NCM</label>
+                <div class="col-md-6">
+                    <label class="form-label text-start">NCM</label>
                     <input type="text" name="ncm" class="form-control" value="{{ $produto->ncm }}">
                 </div>
 
-                <div class="mb-3">
-                    <label>Preço Máximo</label>
+                <div class="col-md-6">
+                    <label class="form-label text-start">Preço Máximo</label>
                     <input type="number" step="0.01" name="precomax" class="form-control" value="{{ $produto->precomax }}">
                 </div>
             </div>
@@ -52,27 +52,26 @@
         <!-- Dados da Embalagem -->
         <div class="card mb-4">
             <div class="card-header bg-secondary text-white">Dados da Embalagem</div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label>Código de Barras</label>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label text-start">Código de Barras</label>
                     <input type="text" name="barra" class="form-control" value="{{ $produto->embalagem->barra ?? '' }}">
                 </div>
 
-                <div class="mb-3">
-                    <label>Descrição Reduzida</label>
+                <div class="col-md-6">
+                    <label class="form-label text-start">Descrição Reduzida</label>
                     <input type="text" name="descrereduzida" class="form-control" value="{{ $produto->embalagem->descrereduzida ?? '' }}">
                 </div>
 
-                <div class="mb-3">
-                    <label>Descrição da Embalagem</label>
+                <div class="col-md-6">
+                    <label class="form-label text-start">Descrição da Embalagem</label>
                     <input type="text" name="embalagem_descr" class="form-control" value="{{ $produto->embalagem->descr ?? '' }}">
                 </div>
 
-                <div class="form-group mb-2" style="max-width: 150px;">
-                    <label>Estoque</label>
-                    <input type="number" name="estoque" class="form-control form-control-sm" value="{{ old('estoque', $produto->estoque ?? 0) }}">
+                <div class="col-md-6">
+                    <label class="form-label text-start">Estoque</label>
+                    <input type="number" name="estoque" class="form-control" value="{{ old('estoque', $produto->estoque ?? 0) }}">
                 </div>
-
             </div>
         </div>
 

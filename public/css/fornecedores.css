@@ -1,0 +1,40 @@
+/* Fornecedores - Layout Padrão */
+
+.form-label {
+    text-align: left !important;
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.modal .form-control {
+    border-radius: 4px;
+}
+
+.modal-header .modal-title {
+    font-weight: bold;
+}
+
+.modal-footer {
+    justify-content: flex-end;
+}
+
+/* Estilização geral de tabelas */
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+/* Botões de ação */
+.btn-outline-secondary i,
+.btn-outline-danger i {
+    pointer-events: none;
+}
+
+.alert-success {
+    font-weight: 500;
+}

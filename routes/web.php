@@ -7,6 +7,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserConfigController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FornecedorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,7 +26,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('clientes', ClienteController::class)->middleware('auth');
-
+Route::resource('fornecedores', FornecedorController::class)->middleware('auth');
 Route::resource('produtos', ProdutoController::class)->middleware('auth');
 
 
@@ -40,6 +41,18 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('produtos', ProdutoController::class);
         Route::get('/funcionarios', [App\Http\Controllers\EmpresaController::class, 'funcionarios'])->name('empresa.funcionarios');
         Route::post('/funcionarios/adicionar', [App\Http\Controllers\EmpresaController::class, 'adicionarFuncionario'])->name('empresa.funcionarios.adicionar');
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/empresa/criar', [EmpresaController::class, 'criar'])->name('empresa.criar');
+            Route::post('/empresa/salvar', [EmpresaController::class, 'salvar'])->name('empresa.salvar');
+        
+            Route::middleware('verifica.empresa')->group(function () {
+                Route::resource('produtos', ProdutoController::class);
+                Route::resource('fornecedores', FornecedorController::class); // <-- ADICIONE AQUI
+                Route::get('/funcionarios', [EmpresaController::class, 'funcionarios'])->name('empresa.funcionarios');
+                Route::post('/funcionarios/adicionar', [EmpresaController::class, 'adicionarFuncionario'])->name('empresa.funcionarios.adicionar');
+            });
+        });
+        
     });
 });
 
@@ -55,4 +68,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/configuracao/usuario/email', [UserConfigController::class, 'atualizarEmail'])->name('config.usuario.email');
     Route::post('/configuracao/usuario/senha', [UserConfigController::class, 'atualizarSenha'])->name('config.usuario.senha');
 });
+
+
 

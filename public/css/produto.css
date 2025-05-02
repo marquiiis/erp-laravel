@@ -1,0 +1,42 @@
+/* Cabeçalho do card */
+.card-header.bg-primary {
+    background-color: #007bff !important;
+    color: white;
+}
+
+/* Cabeçalhos dos formulários */
+.modal-title,
+.card-header {
+    font-weight: bold;
+}
+
+/* Tabela hover */
+.table-hover tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+/* Formulários */
+.modal .form-label {
+    text-align: left !important;
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+
+/* Botões de ação na tabela */
+.btn-outline-secondary i,
+.btn-outline-danger i {
+    font-size: 0.9rem;
+}
+
+/* Responsividade básica para modais */
+@media (max-width: 768px) {
+    .modal-xl {
+        max-width: 95%;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+    }
+}

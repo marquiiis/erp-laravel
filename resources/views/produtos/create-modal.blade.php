@@ -27,31 +27,32 @@
                         'prazocomercializacao' => 'Prazo de Comercialização (dias)',
                         'prazocritico' => 'Prazo Crítico (dias)',
                         'precomax' => 'Preço Máximo',
+                        'estoque' => 'Estoque'
                     ]; @endphp
 
                     @foreach ($camposProduto as $campo => $label)
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label text-start w-100">{{ $label }}</label>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">{{ $label }}</label>
                         <input type="{{ $campo === 'precomax' ? 'number' : 'text' }}" step="0.01" name="{{ $campo }}" class="form-control">
                     </div>
                     @endforeach
 
                     <div class="col-md-4 mb-2">
-                        <label>Manufaturado</label>
+                        <label class="form-label">Manufaturado</label>
                         <select name="manufaturado" class="form-control">
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
-                        <label>Sazonal</label>
+                        <label class="form-label">Sazonal</label>
                         <select name="sazonal" class="form-control">
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
-                        <label>Ativo</label>
+                        <label class="form-label">Ativo</label>
                         <select name="ativo" class="form-control">
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
@@ -87,21 +88,21 @@
                     ]; @endphp
 
                     @foreach ($camposEmbalagem as $campo => $label)
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label text-start w-100">{{ $label }}</label>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">{{ $label }}</label>
                         <input type="text" name="{{ $campo }}" class="form-control">
                     </div>
                     @endforeach
 
-                    <div class="col-md-6 mb-2">
-                        <label>Caixa Fechada</label>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Caixa Fechada</label>
                         <select name="caixafechada" class="form-control">
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-2">
-                        <label>Controle de Estoque</label>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Controle de Estoque</label>
                         <select name="controleestoque" class="form-control">
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
@@ -109,6 +110,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

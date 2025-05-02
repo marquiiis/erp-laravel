@@ -161,7 +161,7 @@
                     <div><i class="fas fa-folder-plus"></i> <span>Cadastro</span></div>
                     <i class="fas fa-chevron-down chevron"></i>
                 </a>
-                <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') ? 'show' : '' }}">
+                <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') || request()->is('fornecedores*') ? 'show' : '' }}">
                     <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
                         <i class="fas fa-box-open"></i>
                         <span>Produtos</span>
@@ -170,6 +170,11 @@
                         <i class="fas fa-users"></i>
                         <span>Clientes</span>
                     </a>
+                    <a href="{{ route('fornecedores.index') }}" class="{{ request()->is('fornecedores*') ? 'active' : '' }}">
+                        <i class="fas fa-truck"></i>
+                        <span>Fornecedores</span>
+                    </a>
+
                 </div>
 
                 <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
