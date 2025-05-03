@@ -7,14 +7,13 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
     <style>
-        body {
+        html, body {
+            height: 100%;
             margin: 0;
-            padding-top: 60px;
-            padding-bottom: 50px;
+            padding: 0;
             overflow-x: hidden;
         }
 
@@ -22,7 +21,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            right: 0;
             height: 60px;
             background-color: #212529;
             color: white;
@@ -37,7 +36,8 @@
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100%;
+            right: 0;
+            height: 50px;
             background-color: #212529;
             color: white;
             text-align: center;
@@ -45,31 +45,24 @@
             z-index: 998;
         }
 
-        .wrapper {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            display: flex;
-            flex: 1;
-        }
-
         .sidebar {
+            position: fixed;
+            top: 60px;
+            bottom: 50px;
+            left: 0;
             width: 250px;
             background-color: #343a40;
             color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transition: all 0.3s ease-in-out;
+            overflow-y: auto;
+            z-index: 997;
         }
 
         .sidebar.collapsed {
             width: 60px;
-        }
-
-        .sidebar h5 {
-            padding: 15px;
-            text-align: center;
         }
 
         .sidebar a {
@@ -87,6 +80,11 @@
         .sidebar a.active {
             background-color: #495057;
             color: white;
+        }
+
+        .sidebar h5 {
+            padding: 15px;
+            text-align: center;
         }
 
         .sidebar i {
@@ -110,22 +108,26 @@
             justify-content: center !important;
         }
 
-        .content {
-            flex: 1;
-            padding: 20px;
-            background-color: #f8f9fa;
+        .logout-button {
+            padding: 15px 20px;
         }
 
-        .btn-toggle {
-            background-color: transparent;
-            border: none;
-            color: white;
+        .content-wrapper {
+            margin-top: 60px;
+            margin-left: 250px;
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            min-height: calc(100vh - 110px);
+        }
+
+        .sidebar.collapsed ~ .content-wrapper {
+            margin-left: 60px;
         }
 
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
-                height: 100%;
                 transform: translateX(-100%);
                 z-index: 998;
             }
@@ -133,8 +135,17 @@
             .sidebar.show {
                 transform: translateX(0);
             }
+
+            .content-wrapper {
+                margin-left: 0 !important;
+            }
         }
 
+        .btn-toggle {
+            background-color: transparent;
+            border: none;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -147,75 +158,71 @@
 </div>
 
 @if(auth()->check())
-    <div class="wrapper">
-        <div class="content-wrapper">
-            <div id="sidebar" class="sidebar">
-                <h5 class="text-white">ERP</h5>
+    <div class="sidebar" id="sidebar">
+        <div>
+            <h5 class="text-white">ERP</h5>
 
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
+            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-folder-plus"></i> <span>Cadastro</span></div>
+                <i class="fas fa-chevron-down chevron"></i>
+            </a>
+            <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') || request()->is('fornecedores*') ? 'show' : '' }}">
+                <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
+                    <i class="fas fa-box-open"></i>
+                    <span>Produtos</span>
                 </a>
-
-                <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
-                    <div><i class="fas fa-folder-plus"></i> <span>Cadastro</span></div>
-                    <i class="fas fa-chevron-down chevron"></i>
+                <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
                 </a>
-                <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') || request()->is('fornecedores*') ? 'show' : '' }}">
-                    <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
-                        <i class="fas fa-box-open"></i>
-                        <span>Produtos</span>
-                    </a>
-                    <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
-                        <i class="fas fa-users"></i>
-                        <span>Clientes</span>
-                    </a>
-                    <a href="{{ route('fornecedores.index') }}" class="{{ request()->is('fornecedores*') ? 'active' : '' }}">
-                        <i class="fas fa-truck"></i>
-                        <span>Fornecedores</span>
-                    </a>
-
-                </div>
-
-                <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
-                    <div><i class="fas fa-cog"></i> <span>Configurações</span></div>
-                    <i class="fas fa-chevron-down chevron"></i>
+                <a href="{{ route('fornecedores.index') }}" class="{{ request()->is('fornecedores*') ? 'active' : '' }}">
+                    <i class="fas fa-truck"></i>
+                    <span>Fornecedores</span>
                 </a>
-                <div id="submenuConfig" class="submenu collapse {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}">
-                    <a href="{{ route('empresa.configuracoes') }}">
-                        <i class="fas fa-building"></i>
-                        <span>Empresa</span>
-                    </a>
-                    <a href="{{ route('config.usuario') }}">
-                        <i class="fas fa-user"></i>
-                        <span>Usuário</span>
-                    </a>
-                </div>
-
-                <form action="{{ route('logout') }}" method="POST" class="mt-3 px-3 logout-button">
-                    @csrf
-                    <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-sign-out-alt me-2"></i> <span>Sair</span>
-                    </button>
-                </form>
             </div>
 
-            <main class="content" id="mainContent">
-                @yield('content')
-            </main>
+            <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-cog"></i> <span>Configurações</span></div>
+                <i class="fas fa-chevron-down chevron"></i>
+            </a>
+            <div id="submenuConfig" class="submenu collapse {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}">
+                <a href="{{ route('empresa.configuracoes') }}">
+                    <i class="fas fa-building"></i>
+                    <span>Empresa</span>
+                </a>
+                <a href="{{ route('config.usuario') }}">
+                    <i class="fas fa-user"></i>
+                    <span>Usuário</span>
+                </a>
+            </div>
         </div>
 
-        <footer class="bottom-bar">
-            {{ date('Y') }} © Todos os direitos reservados — <a href="#" class="text-white text-decoration-underline">Ajuda</a>
-        </footer>
+        <form action="{{ route('logout') }}" method="POST" class="logout-button">
+            @csrf
+            <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
+                <i class="fas fa-sign-out-alt me-2"></i> <span>Sair</span>
+            </button>
+        </form>
     </div>
+
+    <div class="content-wrapper" id="mainContent">
+        @yield('content')
+    </div>
+
+    <footer class="bottom-bar">
+        {{ date('Y') }} © Todos os direitos reservados — <a href="#" class="text-white text-decoration-underline">Ajuda</a>
+    </footer>
 @else
     <main class="p-4">
         @yield('content')
     </main>
 @endif
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const toggle = document.getElementById('toggleMenu');
@@ -226,6 +233,7 @@
             sidebar.classList.toggle('show');
         } else {
             sidebar.classList.toggle('collapsed');
+            document.getElementById('mainContent').classList.toggle('collapsed');
         }
     });
 </script>
