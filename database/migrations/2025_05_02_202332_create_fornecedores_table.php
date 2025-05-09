@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,11 +9,13 @@ return new class extends Migration {
     {
         Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('empresa_id'); // empresa dona do registro
+
             $table->string('codigointerno'); // obrigatório
-            $table->string('razaosocial');              // obrigatório
+            $table->string('razaosocial');   // obrigatório
             $table->string('fantasia')->nullable();
             $table->string('pessoa')->nullable();
-            $table->string('cnpj');           // obrigatório
+            $table->string('cnpj');          // obrigatório
             $table->string('inscrestadual')->nullable();
             $table->string('cpf')->nullable();
             $table->string('rg')->nullable();
@@ -37,7 +40,10 @@ return new class extends Migration {
             $table->string('controleshelflife')->nullable();
             $table->integer('valorshelflife')->nullable();
             $table->string('agente')->nullable();
+
             $table->timestamps();
+
+            $table->foreign('empresa_id')->references('id')->on('empresas')->onDelete('cascade');
         });
     }
 

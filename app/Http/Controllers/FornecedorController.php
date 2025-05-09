@@ -9,9 +9,12 @@ class FornecedorController extends Controller
 {
     public function index()
     {
-        $fornecedores = Fornecedor::all();
+        $empresaId = auth()->user()->empresa_id;
+        $fornecedores = Fornecedor::where('empresa_id', $empresaId)->get();
+
         return view('fornecedores.index', compact('fornecedores'));
     }
+
 
     public function store(Request $request)
     {
@@ -21,11 +24,14 @@ class FornecedorController extends Controller
             'cnpj' => 'required',
         ]);
 
-        $fornecedor = new Fornecedor($request->all());
-        $fornecedor->save();
+        $dados = $request->all();
+        $dados['empresa_id'] = auth()->user()->empresa_id;
+
+        Fornecedor::create($dados);
 
         return redirect()->route('fornecedores.index')->with('success', 'Fornecedor cadastrado com sucesso.');
     }
+
 
     public function update(Request $request, $id)
     {
@@ -35,17 +41,23 @@ class FornecedorController extends Controller
             'cnpj' => 'required',
         ]);
 
-        $fornecedor = Fornecedor::findOrFail($id);
+        $empresaId = auth()->user()->empresa_id;
+        $fornecedor = Fornecedor::where('empresa_id', $empresaId)->findOrFail($id);
+
         $fornecedor->update($request->all());
 
         return redirect()->route('fornecedores.index')->with('success', 'Fornecedor atualizado com sucesso.');
     }
 
+
     public function destroy($id)
     {
-        $fornecedor = Fornecedor::findOrFail($id);
+        $empresaId = auth()->user()->empresa_id;
+        $fornecedor = Fornecedor::where('empresa_id', $empresaId)->findOrFail($id);
+    
         $fornecedor->delete();
-
+    
         return redirect()->route('fornecedores.index')->with('success', 'Fornecedor removido com sucesso.');
     }
+
 }

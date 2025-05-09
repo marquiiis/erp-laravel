@@ -11,6 +11,7 @@ class Fornecedor extends Model
     protected $table = 'fornecedores';
 
     protected $fillable = [
+        'empresa_id',
         'codigointerno',
         'razaosocial',
         'fantasia',
@@ -36,9 +37,10 @@ class Fornecedor extends Model
         'sigla',
         'endentrega',
         'endcobranca',
-        'ativo',
         'controleshelflife',
         'valorshelflife',
         'agente',
+        'ativo',
     ];
+    
 }
