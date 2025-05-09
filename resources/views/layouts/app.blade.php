@@ -158,57 +158,119 @@
 </div>
 
 @if(auth()->check())
-    <div class="sidebar" id="sidebar">
-        <div>
-            <h5 class="text-white">ERP</h5>
+<div class="sidebar" id="sidebar">
+    <div>
+        <h5 class="text-white">ERP</h5>
 
-            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
+        <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
 
-            <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
-                <div><i class="fas fa-folder-plus"></i> <span>Cadastro</span></div>
-                <i class="fas fa-chevron-down chevron"></i>
+        <!-- Cadastro -->
+        <a href="#submenuCadastro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-folder-plus"></i> <span>Cadastro</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') || request()->is('fornecedores*') || request()->is('transportadoras*')  ? 'show' : '' }}">
+            <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
+                <i class="fas fa-box-open"></i>
+                <span>Produtos</span>
             </a>
-            <div id="submenuCadastro" class="submenu collapse {{ request()->is('produtos*') || request()->is('clientes*') || request()->is('fornecedores*') ? 'show' : '' }}">
-                <a href="{{ route('produtos.index') }}" class="{{ request()->is('produtos*') ? 'active' : '' }}">
-                    <i class="fas fa-box-open"></i>
-                    <span>Produtos</span>
-                </a>
-                <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i>
-                    <span>Clientes</span>
-                </a>
-                <a href="{{ route('fornecedores.index') }}" class="{{ request()->is('fornecedores*') ? 'active' : '' }}">
-                    <i class="fas fa-truck"></i>
-                    <span>Fornecedores</span>
-                </a>
-            </div>
-
-            <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
-                <div><i class="fas fa-cog"></i> <span>Configurações</span></div>
-                <i class="fas fa-chevron-down chevron"></i>
+            <a href="{{ route('clientes.index') }}" class="{{ request()->is('clientes*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i>
+                <span>Clientes</span>
             </a>
-            <div id="submenuConfig" class="submenu collapse {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}">
-                <a href="{{ route('empresa.configuracoes') }}">
-                    <i class="fas fa-building"></i>
-                    <span>Empresa</span>
-                </a>
-                <a href="{{ route('config.usuario') }}">
-                    <i class="fas fa-user"></i>
-                    <span>Usuário</span>
-                </a>
-            </div>
+            <a href="{{ route('fornecedores.index') }}" class="{{ request()->is('fornecedores*') ? 'active' : '' }}">
+                <i class="fas fa-warehouse"></i>
+                <span>Fornecedores</span>
+            </a>
+            <a href="{{ route('transportadoras.index') }}" class="{{ request()->is('transportadoras*') ? 'active' : '' }}">
+                <i class="fas fa-truck-moving"></i>
+                <span>Transportadoras</span>
+            </a>
         </div>
 
-        <form action="{{ route('logout') }}" method="POST" class="logout-button">
-            @csrf
-            <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
-                <i class="fas fa-sign-out-alt me-2"></i> <span>Sair</span>
-            </button>
-        </form>
+        <!-- Movimentações -->
+        <a href="#submenuMovimentacoes" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-exchange-alt"></i> <span>Movimentações</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuMovimentacoes" class="submenu collapse">
+            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Pedido de Venda</span></a>
+            <a href="#"><i class="fas fa-sign-in-alt"></i> <span>Pedido de Compra</span></a>
+            <a href="#"><i class="fas fa-dolly"></i> <span>Transferência de Estoque</span></a>
+        </div>
+
+        <!-- Financeiro -->
+        <a href="#submenuFinanceiro" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-dollar-sign"></i> <span>Financeiro</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuFinanceiro" class="submenu collapse">
+            <a href="#"><i class="fas fa-arrow-down"></i> <span>Contas a Pagar</span></a>
+            <a href="#"><i class="fas fa-arrow-up"></i> <span>Contas a Receber</span></a>
+            <a href="#"><i class="fas fa-cash-register"></i> <span>Caixa/Banco</span></a>
+        </div>
+
+        <!-- Faturamento -->
+        <a href="#submenuFaturamento" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-file-invoice-dollar"></i> <span>Faturamento</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuFaturamento" class="submenu collapse">
+            <a href="#"><i class="fas fa-file-alt"></i> <span>Notas Fiscais</span></a>
+            <a href="#"><i class="fas fa-upload"></i> <span>Emissão de NF-e</span></a>
+            <a href="#"><i class="fas fa-barcode"></i> <span>Etiquetas</span></a>
+        </div>
+
+        <!-- Relatórios -->
+        <a href="#submenuRelatorios" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-chart-line"></i> <span>Relatórios</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuRelatorios" class="submenu collapse">
+            <a href="#"><i class="fas fa-file-alt"></i> <span>Vendas</span></a>
+            <a href="#"><i class="fas fa-box"></i> <span>Estoque</span></a>
+            <a href="#"><i class="fas fa-money-check-alt"></i> <span>Financeiro</span></a>
+        </div>
+
+        <!-- Usuários -->
+        <a href="#submenuUsuarios" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-user-cog"></i> <span>Usuários</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuUsuarios" class="submenu collapse">
+            <a href="#"><i class="fas fa-users-cog"></i> <span>Gerenciar Acessos</span></a>
+            <a href="#"><i class="fas fa-user-lock"></i> <span>Permissões</span></a>
+        </div>
+
+        <!-- Configurações -->
+        <a href="#submenuConfig" data-bs-toggle="collapse" class="d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-cog"></i> <span>Configurações</span></div>
+            <i class="fas fa-chevron-down chevron"></i>
+        </a>
+        <div id="submenuConfig" class="submenu collapse {{ request()->is('configuracoes') || request()->is('configuracao*') ? 'show' : '' }}">
+            <a href="{{ route('empresa.configuracoes') }}">
+                <i class="fas fa-building"></i>
+                <span>Empresa</span>
+            </a>
+            <a href="{{ route('config.usuario') }}">
+                <i class="fas fa-user"></i>
+                <span>Usuário</span>
+            </a>
+        </div>
     </div>
+
+    <!-- Botão Logout -->
+    <form action="{{ route('logout') }}" method="POST" class="logout-button">
+        @csrf
+        <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
+            <i class="fas fa-sign-out-alt me-2"></i> <span>Sair</span>
+        </button>
+    </form>
+</div>
+
 
     <div class="content-wrapper" id="mainContent">
         @yield('content')

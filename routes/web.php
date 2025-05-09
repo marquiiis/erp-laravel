@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserConfigController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FornecedorController;
+use App\http\Controllers\TransportadoraController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
             Route::middleware('verifica.empresa')->group(function () {
                 Route::resource('produtos', ProdutoController::class);
                 Route::resource('fornecedores', FornecedorController::class); // <-- ADICIONE AQUI
+                Route::resource('transportadoras', App\Http\Controllers\TransportadoraController::class);
                 Route::get('/funcionarios', [EmpresaController::class, 'funcionarios'])->name('empresa.funcionarios');
                 Route::post('/funcionarios/adicionar', [EmpresaController::class, 'adicionarFuncionario'])->name('empresa.funcionarios.adicionar');
             });
